@@ -379,3 +379,92 @@ export const updateCustomerAddress = async (
       return { success: false, error: err.toString() }
     })
 }
+
+export async function changePassword(
+  _currentState: unknown,
+  formData: FormData
+): Promise<{ success: boolean; error: string | null }> {
+  const oldPassword = formData.get("old_password") as string
+  const newPassword = formData.get("new_password") as string
+  const confirmPassword = formData.get("confirm_password") as string
+
+  if (newPassword !== confirmPassword) {
+    return { success: false, error: "The passwords do not match" }
+  }
+
+  if (newPassword.length < 8) {
+    return {
+      success: false,
+      error: "The new password must be at least 8 characters",
+    }
+  }
+
+  try {
+    await sdk.client.fetch(`/store/customers/me/password`, {
+      method: "POST",
+      body: { old_password: oldPassword, new_password: newPassword },
+      headers: { ...(await getAuthHeaders()) },
+    })
+    return { success: true, error: null }
+  } catch (error) {
+    return {
+      success: false,
+      error: (error as FetchError).message || "Could not change the password",
+    }
+  }
+}
+
+// Always reports success so that the response doesn't reveal which emails
+// have an account.
+export async function requestPasswordReset(
+  _currentState: unknown,
+  formData: FormData
+): Promise<{ sent: boolean }> {
+  const email = formData.get("email") as string
+
+  try {
+    await sdk.auth.resetPassword("customer", "emailpass", {
+      identifier: email,
+    })
+  } catch {
+    // Ignored on purpose, see above.
+  }
+
+  return { sent: true }
+}
+
+export async function resetPassword(
+  _currentState: unknown,
+  formData: FormData
+): Promise<{ success: boolean; error: string | null }> {
+  const token = formData.get("token") as string
+  const email = formData.get("email") as string
+  const password = formData.get("password") as string
+  const confirmPassword = formData.get("confirm_password") as string
+
+  if (password !== confirmPassword) {
+    return { success: false, error: "The passwords do not match" }
+  }
+
+  if (password.length < 8) {
+    return {
+      success: false,
+      error: "The password must be at least 8 characters",
+    }
+  }
+
+  try {
+    await sdk.auth.updateProvider(
+      "customer",
+      "emailpass",
+      { email, password },
+      token
+    )
+    return { success: true, error: null }
+  } catch {
+    return {
+      success: false,
+      error: "This reset link is invalid or has expired. Request a new one.",
+    }
+  }
+}
