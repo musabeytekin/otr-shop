@@ -1,5 +1,6 @@
 import { HttpTypes } from "@medusajs/types"
 import { Heading, Text } from "@modules/common/components/ui"
+import WishlistButton from "@modules/wishlist/components/wishlist-button"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 
 type ProductInfoProps = {
@@ -25,6 +26,13 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
         >
           {product.title}
         </Heading>
+
+        <div className="flex items-center gap-x-2">
+          <WishlistButton productId={product.id!} className="items-start" />
+          <span className="text-small-regular text-ui-fg-subtle">
+            Save to wishlist
+          </span>
+        </div>
 
         <Text
           className="text-medium text-ui-fg-subtle whitespace-pre-line"
