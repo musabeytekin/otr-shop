@@ -8,6 +8,7 @@ import useSearchSettled from "@lib/hooks/use-search-settled"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import { Text } from "@modules/common/components/ui"
 import Thumbnail from "@modules/products/components/thumbnail"
+import WishlistButton from "@modules/wishlist/components/wishlist-button"
 import SkeletonProductGrid from "@modules/skeletons/templates/skeleton-product-grid"
 import SearchPagination from "./pagination"
 import HitPrice, { HitPricing } from "./price"
@@ -78,7 +79,7 @@ const StoreHits = ({ hitsPerPage, currencyCode }: StoreHitsProps) => {
         >
           {items.map((hit) =>
             hit.handle ? (
-              <li key={hit.objectID}>
+              <li key={hit.objectID} className="relative">
                 <LocalizedClientLink
                   href={`/products/${hit.handle}`}
                   className="group"
@@ -96,6 +97,10 @@ const StoreHits = ({ hitsPerPage, currencyCode }: StoreHitsProps) => {
                     </div>
                   </div>
                 </LocalizedClientLink>
+                <WishlistButton
+                  productId={hit.objectID}
+                  className="absolute right-2 top-2"
+                />
               </li>
             ) : null
           )}

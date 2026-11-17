@@ -3,6 +3,7 @@ import { getProductPrice } from "@lib/util/get-product-price"
 import { HttpTypes } from "@medusajs/types"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import Thumbnail from "../thumbnail"
+import WishlistButton from "@modules/wishlist/components/wishlist-button"
 import PreviewPrice from "./price"
 
 export default async function ProductPreview({
@@ -28,24 +29,33 @@ export default async function ProductPreview({
   })
 
   return (
-    <LocalizedClientLink href={`/products/${product.handle}`} className="group">
-      <div data-testid="product-wrapper">
-        <Thumbnail
-          thumbnail={product.thumbnail}
-          images={product.images}
-          alt={product.title}
-          size="full"
-          isFeatured={isFeatured}
-        />
-        <div className="flex txt-compact-medium mt-4 justify-between">
-          <Text className="text-ui-fg-subtle" data-testid="product-title">
-            {product.title}
-          </Text>
-          <div className="flex items-center gap-x-2">
-            {cheapestPrice && <PreviewPrice price={cheapestPrice} />}
+    <div className="relative">
+      <LocalizedClientLink
+        href={`/products/${product.handle}`}
+        className="group"
+      >
+        <div data-testid="product-wrapper">
+          <Thumbnail
+            thumbnail={product.thumbnail}
+            images={product.images}
+            alt={product.title}
+            size="full"
+            isFeatured={isFeatured}
+          />
+          <div className="flex txt-compact-medium mt-4 justify-between">
+            <Text className="text-ui-fg-subtle" data-testid="product-title">
+              {product.title}
+            </Text>
+            <div className="flex items-center gap-x-2">
+              {cheapestPrice && <PreviewPrice price={cheapestPrice} />}
+            </div>
           </div>
         </div>
-      </div>
-    </LocalizedClientLink>
+      </LocalizedClientLink>
+      <WishlistButton
+        productId={product.id!}
+        className="absolute right-2 top-2"
+      />
+    </div>
   )
 }
