@@ -11,6 +11,7 @@ import OptionSelect from "@modules/products/components/product-actions/option-se
 import { isEqual } from "lodash"
 import { useParams, usePathname } from "next/navigation"
 import { FormEvent, useEffect, useMemo, useRef, useState } from "react"
+import WishlistButton from "@modules/wishlist/components/wishlist-button"
 import ProductPrice from "../product-price"
 import MobileActions from "./mobile-actions"
 import { useRouter } from "next/navigation"
@@ -211,6 +212,11 @@ export default function ProductActions({
               : "Add to cart"}
           </Button>
         </form>
+        <WishlistButton
+          productId={product.id}
+          productTitle={product.title}
+          variant="inline"
+        />
         <MobileActions
           product={product}
           variant={selectedVariant}

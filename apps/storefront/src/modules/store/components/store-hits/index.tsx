@@ -9,6 +9,7 @@ import LocalizedClientLink from "@modules/common/components/localized-client-lin
 import { Text } from "@modules/common/components/ui"
 import Thumbnail from "@modules/products/components/thumbnail"
 import SkeletonProductGrid from "@modules/skeletons/templates/skeleton-product-grid"
+import WishlistButton from "@modules/wishlist/components/wishlist-button"
 import SearchPagination from "./pagination"
 import HitPrice, { HitPricing } from "./price"
 
@@ -78,7 +79,7 @@ const StoreHits = ({ hitsPerPage, currencyCode }: StoreHitsProps) => {
         >
           {items.map((hit) =>
             hit.handle ? (
-              <li key={hit.objectID}>
+              <li key={hit.objectID} className="relative">
                 <LocalizedClientLink
                   href={`/products/${hit.handle}`}
                   className="group"
@@ -96,6 +97,10 @@ const StoreHits = ({ hitsPerPage, currencyCode }: StoreHitsProps) => {
                     </div>
                   </div>
                 </LocalizedClientLink>
+                <WishlistButton
+                  productId={hit.objectID}
+                  productTitle={hit.title ?? hit.handle}
+                />
               </li>
             ) : null
           )}
