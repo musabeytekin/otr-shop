@@ -37,7 +37,7 @@ export const addWishlistItemStep = createStep(
 
     try {
       const item = await service.createWishlistItems(input)
-      return new StepResponse(item, item.id)
+      return new StepResponse(item)
     } catch (e) {
       // A concurrent request may have created it between the check and insert.
       const [created] = await service.listWishlistItems(input, { take: 1 })
@@ -46,12 +46,5 @@ export const addWishlistItemStep = createStep(
       }
       throw e
     }
-  },
-  async (id, { container }) => {
-    if (!id) {
-      return
-    }
-    const service: WishlistModuleService = container.resolve(WISHLIST_MODULE)
-    await service.deleteWishlistItems(id)
   }
 )
