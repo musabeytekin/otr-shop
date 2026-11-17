@@ -8,6 +8,7 @@ import RelatedProducts from "@modules/products/components/related-products"
 import ProductInfo from "@modules/products/templates/product-info"
 import SkeletonRelatedProducts from "@modules/skeletons/templates/skeleton-related-products"
 import { notFound } from "next/navigation"
+import { getRegionPolicies } from "@lib/util/store-policies"
 import { HttpTypes } from "@medusajs/types"
 
 type ProductTemplateProps = {
@@ -33,7 +34,11 @@ const ProductTemplate: React.FC<ProductTemplateProps> = ({
       >
         <div className="flex flex-col small:sticky small:top-48 small:py-0 small:max-w-[300px] w-full py-8 gap-y-6">
           <ProductInfo product={product} />
-          <ProductTabs product={product} />
+          <ProductTabs
+            product={product}
+            policies={getRegionPolicies(region)}
+            currencyCode={region.currency_code}
+          />
         </div>
         <div className="block w-full relative">
           <VariantImageGallery product={product} />
